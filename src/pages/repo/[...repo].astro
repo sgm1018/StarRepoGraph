@@ -1,0 +1,11 @@
+---
+const { repo } = Astro.params;
+
+// Simulación: Guarda o procesa los valores dinámicos
+console.log(`Repositorio: ${Array.isArray(repo) ? repo.join('/') : repo}`);
+---
+
+<div>
+    <h1>Bienvenido</h1>
+    <p>Repositorio: <strong>{repo}</strong></p>
+</div>
