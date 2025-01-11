@@ -1,4 +1,4 @@
 export const Entorno = {
-    api: 'https://api.github.com',
-    token: ''
+    Api: 'https://api.github.com',
+    Token: ''
 }

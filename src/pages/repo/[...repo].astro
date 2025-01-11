@@ -1,5 +1,21 @@
 ---
+import { Api } from "../../core/api/Api";
+import { Scrapper } from "../../core/scrapper/Scrapper";
+
+
 const { repo } = Astro.params;
+const user = repo.split('/')[0];
+const repoName = repo.split('/')[1];
+
+const api = new Api();
+const scrapper = new Scrapper();
+const data = await scrapper.getSortedStars(user, repoName, 100);
+const groupedData = scrapper.groupByDate(data);
+console.log(data);
+
+
+
+
 
 // Simulación: Guarda o procesa los valores dinámicos
 
