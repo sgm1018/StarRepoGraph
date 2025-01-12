@@ -15,7 +15,8 @@ export class Scrapper {
         let hasMore = true;
         const userData: UserData ={
             User: [],
-            RepoStars: []
+            RepoStars: [],
+            RepoName : repo
         }
         userData.User = await this.api.fetchUSer(user);
         

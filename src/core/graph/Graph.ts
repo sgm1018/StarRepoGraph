@@ -6,19 +6,60 @@ export class Graph{
 
     public static generateLineChart(user: UserData, data: Record<string, number>): string {
         const d3n = new D3Node();
-        const margin = { top: 20, right: 20, bottom: 40, left: 60 };
+        const margin = { top: 120, right: 20, bottom: 40, left: 60 }; // Aumentar margen superior para el encabezado
         const width = 800 - margin.left - margin.right;
         const height = 400 - margin.top - margin.bottom;
         const avatarImage = user.User['avatar_url'];
+        const userName = user.User['name'];
+        const repoName = user.RepoName;
     
         const svg = d3n.createSVG(width + margin.left + margin.right, height + margin.top + margin.bottom);
     
+        // Crear el grupo del encabezado para el avatar y el texto
+        const headerGroup = svg.append('g')
+            .attr('transform', `translate(${width / 2 + margin.left}, ${margin.top / 3})`);
+    
+        // Avatar circular
+        headerGroup.append('circle')
+            .attr('cx', 0)
+            .attr('cy', 0)
+            .attr('r', 30)
+            .attr('fill', 'white')
+            .attr('stroke', '#4CAF50')
+            .attr('stroke-width', 2);
+    
+        headerGroup.append('image')
+            .attr('href', avatarImage)
+            .attr('x', -30)
+            .attr('y', -30)
+            .attr('width', 60)
+            .attr('height', 60)
+            .attr('clip-path', 'circle(30px at 30px 30px)');
+    
+        // Texto del encabezado: userName / repoName
+        headerGroup.append('text')
+            .attr('x', 0)
+            .attr('y', 50)
+            .attr('text-anchor', 'middle')
+            .attr('font-family', 'Arial, sans-serif')
+            .attr('font-size', 16)
+            .attr('fill', '#333')
+            .text(`${userName} / ${repoName}`);
+    
         // Formatear etiquetas para el eje X
-        let labels = Object.keys(data).map(dateStr => {
-            const date = new Date(dateStr);
-            return `${date.toLocaleString('en-US', { month: 'short' })} ${date.getDate()}`;
-        });
-        let values = Object.values(data);
+        let labels: string[] = [];
+        let values: number[] = [];
+    
+        if (data && typeof data === 'object' && Object.keys(data).length > 0) {
+            labels = Object.keys(data).map(dateStr => {
+                const date = new Date(dateStr);
+                return `${date.toLocaleString('en-US', { month: 'short' })} ${date.getDate()}`;
+            });
+    
+            values = Object.values(data);
+        } else {
+            throw new Error("Data is invalid or empty. Please provide a valid 'data' object.");
+        }
     
         // Reducir la cantidad de etiquetas si son muchas
         if (labels.length > 10) {
@@ -118,6 +159,7 @@ export class Graph{
     
         return d3n.svgString();
     }
+      
     
 
     public static createGraph(data: any): any {
