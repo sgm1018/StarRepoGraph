@@ -11,7 +11,8 @@ const api = new Api();
 const scrapper = new Scrapper();
 const userData = await scrapper.getSortedStars(user, repoName, 100);
 const starsTimeline = scrapper.generateStarsTimeline(userData);
-const svg = Graph.generateLineChart(userData, starsTimeline);
+// const svg = Graph.generateLineChart(userData, starsTimeline);
+const svg = Graph.generateLineChart(userData,starsTimeline);
 const blob = new Blob([svg], { type: 'image/svg+xml' });
 
 return new Response(blob, {

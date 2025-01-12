@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 :root {
   --primary: #2563eb;
   --secondary: #3b82f6;
@@ -9,7 +10,7 @@
   --background: #ffffff;
   --text: #0f172a;
   --border: #e2e8f0;
-  --blob: #fffff
+  --blob: #ffffff;
 }
 
 .dark {
@@ -19,7 +20,7 @@
   --background: #0f172a;
   --text: #f8fafc;
   --border: #1e293b;
-  --blob: #fffff
+  --blob: #ffffff;
 }
 
 body {

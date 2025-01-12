@@ -44,7 +44,7 @@ export class Api{
             return response.json();
         })
             
-    }
+    }   
 
     public async fetchStars(user: string, repo: string, path: string,  mode: string, per_page: number, page: number): Promise<any> {
         const url = new URL(`${Entorno.Api}/${path}/${user}/${repo}/${mode}`);

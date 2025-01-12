@@ -6,54 +6,63 @@ export class Graph{
 
     public static generateLineChart(user: UserData, data: Record<string, number>): string {
         const d3n = new D3Node();
-        const margin = { top: 120, right: 20, bottom: 40, left: 60 }; // Aumentar margen superior para el encabezado
-        const width = 800 - margin.left - margin.right;
-        const height = 400 - margin.top - margin.bottom;
+        const width = 800; 
+        const height = 600; 
+        const margin = { top: 200, right: 20, bottom: 40, left: 60 }; 
+        const chartWidth = width - margin.left - margin.right;
+        const chartHeight = height - margin.top - margin.bottom;
         const avatarImage = user.User['avatar_url'];
         const userName = user.User['name'];
         const repoName = user.RepoName;
     
-        const svg = d3n.createSVG(width + margin.left + margin.right, height + margin.top + margin.bottom);
+        const svg = d3n.createSVG(width, height);
     
-        // Crear el grupo del encabezado para el avatar y el texto
-        const headerGroup = svg.append('g')
-            .attr('transform', `translate(${width / 2 + margin.left}, ${margin.top / 3})`);
+        svg.append('image')
+            .attr('href', avatarImage)
+            .attr('x', 0)
+            .attr('y', 0)
+            .attr('width', width)
+            .attr('height', height)
+            .attr('preserveAspectRatio', 'xMidYMid slice')
+            .style('filter', 'blur(10px)') 
+            .style('opacity', 0.1); 
     
-        // Avatar circular
-        headerGroup.append('circle')
+        const avatarGroup = svg.append('g')
+            .attr('transform', `translate(${width / 2}, ${margin.top / 2})`);
+    
+        avatarGroup.append('circle')
             .attr('cx', 0)
             .attr('cy', 0)
-            .attr('r', 30)
+            .attr('r', 50)
             .attr('fill', 'white')
-            .attr('stroke', '#4CAF50')
-            .attr('stroke-width', 2);
+            .attr('stroke', '#FF69B4')
+            .attr('stroke-width', 4);
     
-        headerGroup.append('image')
+        avatarGroup.append('image')
             .attr('href', avatarImage)
-            .attr('x', -30)
-            .attr('y', -30)
-            .attr('width', 60)
-            .attr('height', 60)
-            .attr('clip-path', 'circle(30px at 30px 30px)');
+            .attr('x', -50)
+            .attr('y', -50)
+            .attr('width', 100)
+            .attr('height', 100)
+            .attr('clip-path', 'circle(50px at 50px 50px)');
     
-        // Texto del encabezado: userName / repoName
-        headerGroup.append('text')
-            .attr('x', 0)
-            .attr('y', 50)
+        svg.append('text')
+            .attr('x', width / 2)
+            .attr('y', margin.top / 2 + 80)
             .attr('text-anchor', 'middle')
             .attr('font-family', 'Arial, sans-serif')
-            .attr('font-size', 16)
-            .attr('fill', '#333')
+            .attr('font-size', 24)
+            .attr('fill', 'black')
+            .attr('font-weight', 'bold')
             .text(`${userName} / ${repoName}`);
     
-        // Formatear etiquetas para el eje X
         let labels: string[] = [];
         let values: number[] = [];
     
         if (data && typeof data === 'object' && Object.keys(data).length > 0) {
             labels = Object.keys(data).map(dateStr => {
                 const date = new Date(dateStr);
-                return `${date.toLocaleString('en-US', { month: 'short' })} ${date.getDate()}`;
+                return `${date.toLocaleString('en-US', { month: 'short' })} ${date.getDate()}, ${date.getFullYear()}`;
             });
     
             values = Object.values(data);
@@ -61,24 +70,21 @@ export class Graph{
             throw new Error("Data is invalid or empty. Please provide a valid 'data' object.");
         }
     
-        // Reducir la cantidad de etiquetas si son muchas
         if (labels.length > 10) {
             const step = Math.ceil(labels.length / 10);
             labels = labels.filter((_, i) => i % step === 0);
             values = values.filter((_, i) => i % step === 0);
         }
     
-        // Escalas
         const x = d3n.d3.scalePoint()
             .domain(labels)
-            .range([0, width]);
+            .range([0, chartWidth]);
     
         const y = d3n.d3.scaleLinear()
             .domain([0, Math.max(...values)])
             .nice()
-            .range([height, 0]);
+            .range([chartHeight, 0]);
     
-        // Definir línea y área suavizada
         const line = d3n.d3.line<number>()
             .x((_, i) => x(labels[i])!)
             .y(d => y(d))
@@ -86,11 +92,10 @@ export class Graph{
     
         const area = d3n.d3.area<number>()
             .x((_, i) => x(labels[i])!)
-            .y0(height)
+            .y0(chartHeight)
             .y1(d => y(d))
             .curve(d3n.d3.curveMonotoneX);
     
-        // Gradiente para el área debajo de la línea
         const defs = svg.append('defs');
         const gradient = defs.append('linearGradient')
             .attr('id', 'area-gradient')
@@ -109,34 +114,31 @@ export class Graph{
             .attr('stop-color', '#4CAF50')
             .attr('stop-opacity', 0);
     
-        // Crear grupo para el gráfico
         const chart = svg.append('g')
             .attr('transform', `translate(${margin.left}, ${margin.top})`);
     
-        // Ejes y líneas de la cuadrícula
         chart.append('g')
-            .attr('transform', `translate(0, ${height})`)
-            .call(d3n.d3.axisBottom(x).tickSize(-height).tickPadding(10))
+            .attr('transform', `translate(0, ${chartHeight})`)
+            .call(d3n.d3.axisBottom(x).tickSize(-chartHeight).tickPadding(10))
             .selectAll('text')
             .attr('transform', 'rotate(-30)')
-            .style('text-anchor', 'end');
+            .style('text-anchor', 'end')
+            .style('font-size', '9px')
+            .style('font-family','Playwrite AU TAS Variable');
     
         chart.append('g')
-            .call(d3n.d3.axisLeft(y).ticks(10).tickSize(-width).tickPadding(10));
+            .call(d3n.d3.axisLeft(y).ticks(10).tickSize(-chartWidth).tickPadding(10));
     
-        // Personalizar las líneas de la cuadrícula
         chart.selectAll('.tick line')
             .style('stroke', 'gray')
-            .style('stroke-opacity', 0.3) // Reduce la opacidad
-            .style('stroke-dasharray', '4,2'); // Hace que las líneas sean discontinuas
+            .style('stroke-opacity', 0.3)
+            .style('stroke-dasharray', '4,2');
     
-        // Área debajo de la línea
         chart.append('path')
             .datum(values)
             .attr('fill', 'url(#area-gradient)')
             .attr('d', area);
     
-        // Línea principal
         chart.append('path')
             .datum(values)
             .attr('fill', 'none')
@@ -144,7 +146,6 @@ export class Graph{
             .attr('stroke-width', 2)
             .attr('d', line);
     
-        // Puntos en la línea
         chart.selectAll('.dot')
             .data(values)
             .enter()
@@ -159,6 +160,73 @@ export class Graph{
     
         return d3n.svgString();
     }
+    
+    
+
+    public static generateStyledUI(user: UserData): string {
+        const d3n = new D3Node();
+        const width = 400; // Ancho total de la UI
+        const height = 600; // Alto total de la UI
+        const avatarImage = user.User['avatar_url'];
+        const userName = user.User['name'];
+    
+        const svg = d3n.createSVG(width, height);
+    
+        // Fondo con la imagen grande del avatar
+        svg.append('image')
+            .attr('href', avatarImage)
+            .attr('x', 0)
+            .attr('y', 0)
+            .attr('width', width)
+            .attr('height', height)
+            .attr('preserveAspectRatio', 'xMidYMid slice')
+            .style('filter', 'blur(10px)') // Efecto de desenfoque
+            .style('opacity', 0.6); // Transparencia para resaltar elementos en primer plano
+    
+        // Círculo pequeño para el avatar
+        const avatarGroup = svg.append('g')
+            .attr('transform', `translate(${width / 2}, ${height / 3})`);
+    
+        avatarGroup.append('circle')
+            .attr('cx', 0)
+            .attr('cy', 0)
+            .attr('r', 50) // Radio del círculo pequeño
+            .attr('fill', 'white')
+            .attr('stroke', '#FF69B4') // Borde rosa para darle un diseño moderno
+            .attr('stroke-width', 4);
+    
+        avatarGroup.append('image')
+            .attr('href', avatarImage)
+            .attr('x', -50)
+            .attr('y', -50)
+            .attr('width', 100)
+            .attr('height', 100)
+            .attr('clip-path', 'circle(50px at 50px 50px)');
+    
+        // Texto con el nombre del usuario
+        svg.append('text')
+            .attr('x', width / 2)
+            .attr('y', height / 2 + 20)
+            .attr('text-anchor', 'middle')
+            .attr('font-family', 'Arial, sans-serif')
+            .attr('font-size', 24)
+            .attr('fill', 'white')
+            .attr('font-weight', 'bold')
+            .text(userName);
+    
+        // Texto adicional (ejemplo: "User")
+        svg.append('text')
+            .attr('x', width / 2)
+            .attr('y', height / 2 + 60)
+            .attr('text-anchor', 'middle')
+            .attr('font-family', 'Arial, sans-serif')
+            .attr('font-size', 16)
+            .attr('fill', '#FF69B4')
+            .text('User');
+    
+        return d3n.svgString();
+    }
+    
       
     
 
