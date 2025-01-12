@@ -1,11 +1,22 @@
 ---
+import { Api } from "../../core/api/Api";
+import { Scrapper } from "../../core/scrapper/Scrapper";
+import { Graph } from "../../core/graph/Graph";
+
 const { repo } = Astro.params;
+const user = repo.split('/')[0];
+const repoName = repo.split('/')[1];
 
-// Simulación: Guarda o procesa los valores dinámicos
+const api = new Api();
+const scrapper = new Scrapper();
+const userData = await scrapper.getSortedStars(user, repoName, 100);
+const starsTimeline = scrapper.generateStarsTimeline(userData);
+const svg = Graph.generateLineChart(userData, starsTimeline);
+const blob = new Blob([svg], { type: 'image/svg+xml' });
 
+return new Response(blob, {
+    headers: {
+        'Content-Type': 'image/svg+xml'
+    }
+});
 ---
-
-<div>
-    <h1>Bienvenido</h1>
-    <p>Repositorio: <strong>{repo}</strong></p>
-</div>

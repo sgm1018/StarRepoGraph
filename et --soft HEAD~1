@@ -1,0 +1,35 @@
+[33mcommit 4c867f452f3ccb349ff368fcac004ef04dcf9421[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: Sergio González Martínez <1018sgm1018@gmail.com>
+Date:   Sun Jan 12 18:07:46 2025 +0100
+
+    Feat: cambios en el estilo, generacion de UI mas morderna de la grafica, obtencion de informacion del usuario, generacion de clase que se guardara cache
+
+[33mcommit e3745eba9fed10e790353dec6bbcac8b474d142e[m
+Author: Sergio González Martínez <1018sgm1018@gmail.com>
+Date:   Sun Jan 12 18:06:46 2025 +0100
+
+    Feat: cambios en el estilo, generacion de UI mas morderna de la grafica, obtencion de informacion del usuario, generacion de clase que se guardara cache
+
+[33mcommit c16936abbe52d9b05c2500c372444344fe52ca69[m
+Author: Sergio González Martínez <1018sgm1018@gmail.com>
+Date:   Sat Jan 11 18:20:51 2025 +0100
+
+    Feat: now I create my custon chart due too its imposible to create tradingviews charts on serverSide
+
+[33mcommit 29ad39d36bbd9dc1cf1c23cef153551eb06ad2a6[m[33m ([m[1;31morigin/main[m[33m)[m
+Author: Sergio González Martínez <1018sgm1018@gmail.com>
+Date:   Sat Jan 11 16:21:33 2025 +0100
+
+    Feat: ordered stars grouped by date
+
+[33mcommit bdfc1940d79d0b733de744ea086e8beb42599772[m
+Author: Sergio González Martínez <1018sgm1018@gmail.com>
+Date:   Sat Jan 11 15:48:45 2025 +0100
+
+    Feat: added class structure(api, Enviroment, scrapper), api page
+
+[33mcommit 4a2fe8db77a0978336a2f87300250443bd6b0bcc[m
+Author: Sergio González Martínez <1018sgm1018@gmail.com>
+Date:   Sat Jan 11 14:57:06 2025 +0100
+
+    Feat: UI added
