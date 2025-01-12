@@ -37,7 +37,7 @@ const SearchBar = () => {
   
 
   return (
-    <div className="relative flex flex-col sm:flex-row gap-4">
+    <div className="relative flex flex-col sm:flex-row gap-4 pt-10">
       <div className="flex-1 relative group">
         <div className="absolute inset-0 bg-gradient-to-r from-primary to-secondary rounded-xl blur opacity-25 group-hover:opacity-40 transition duration-200"></div>
         <input
