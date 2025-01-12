@@ -1,5 +1,5 @@
 ---
-const starCount = fetch('https://api.github.com/repos/sgm1018/gitllmtrainer').then(res => res.json()).then(data => data.stargazers_count).catch(() => 0);
+const starCount = fetch('https://api.github.com/repos/sgm1018/StarRepoGraph').then(res => res.json()).then(data => data.stargazers_count).catch(() => 0);
 ---
  
 <header class="sticky top-0 w-full bg-background border-b border-border z-50">
@@ -11,7 +11,7 @@ const starCount = fetch('https://api.github.com/repos/sgm1018/gitllmtrainer').th
       </div>
       <div class="flex items-center space-x-4">
         <a
-          href="https://github.com/sgm1018/githubstar"
+          href="https://github.com/sgm1018/StarRepoGraph"
           class="inline-flex items-center px-4 py-2 border border-border rounded-md shadow-sm text-sm font-medium hover:bg-secondary hover:text-white transition-colors duration-200"
           target="_blank"
           rel="noopener noreferrer"
