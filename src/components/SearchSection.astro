@@ -1,7 +1,6 @@
 ---
 import Blob from './Blob.astro';
-import SearchBar from './SearchBar.astro';
-import SearchhBar from './SearchBar.astro';
+import SearchBar from './react/searchBar/SearchBar';
 ---
 
 <section class="relative min-h-[80vh] flex items-center overflow-hidden">
@@ -25,7 +24,7 @@ import SearchhBar from './SearchBar.astro';
         </p>
       </div>
 
-      <SearchBar client:only="react" />
+      <SearchBar client:load />
 
 
 
