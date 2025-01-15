@@ -1,54 +1,56 @@
-# Astro Starter Kit: Basics
 
-```sh
-npm create astro@latest -- --template basics
+# StarRepoGraph
+
+StarRepoGraph is an application designed to provide detailed statistics and historical data for GitHub repositories. It features a modern user interface that allows users to visualize a repository's **Stars** growth over time. Additionally, it offers an embeddable API to integrate these statistics directly into a `README.md` file.
+
+## 🚀 Features
+
+- Fetches historical data and statistics using the GitHub API.
+- Displays a repository's **Stars** evolution over time with a sleek and modern UI.
+- Provides an API endpoint for embedding the star history directly into other `README.md` files.
+
+## 🛠️ Technologies
+
+StarRepoGraph is built using the following technologies:
+
+- **Frontend and Backend**: [Astro](https://astro.build/)
+  - While not commonly used as an API, Astro's SSR (Server-Side Rendering) capabilities make it suitable for both frontend and backend tasks.
+- **Database**: [Redis](https://redis.io/) is used for caching results and improving performance.
+
+## 📦 Installation
+
+
+
+## 🌐 Usage
+``` 
+npm install or npm i
+```
+1. Access the app in your browser.
+2. Search for a GitHub repository by its owner and name.
+3. View the star growth history and access the embeddable API.
+
+### Embeddable API
+
+Use the following endpoint to fetch star history data for a repository and embed it in your README.md:
+
+```bash
+GET /api/repo/:owner/:repo
 ```
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
+Example:
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src/
-│   ├── components/
-│   │   └── Card.astro
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
-└── package.json
+```bash
+GET /api/repo/sgm1018/StarRepoGraph
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+The response will contain a BLOB data with historical star statistics.
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+## 🤝 Contributing
 
-Any static assets, like images, can be placed in the `public/` directory.
+## 📄 License
 
-## 🧞 Commands
+This project is licensed under the [MIT License](LICENSE).
 
-All commands are run from the root of the project, from a terminal:
+---
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Enjoy using **StarRepoGraph**!
