@@ -1,5 +1,8 @@
 
 # StarRepoGraph
+  [![GitHub](https://img.shields.io/badge/GitHub-API-blue?logo=github)](https://github.com)
+  [![Astro](https://img.shields.io/badge/Frontend%20%2F%20Backend-Astro-orange?logo=astro)](https://astro.build/)
+  [![Redis](https://img.shields.io/badge/Database-Redis-red?logo=redis)](https://redis.io/)
 
 StarRepoGraph is an application designed to provide detailed statistics and historical data for GitHub repositories. It features a modern user interface that allows users to visualize a repository's **Stars** growth over time. Additionally, it offers an embeddable API to integrate these statistics directly into a `README.md` file.
 
