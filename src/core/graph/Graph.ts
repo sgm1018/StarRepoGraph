@@ -56,19 +56,19 @@ export class Graph{
             .attr('font-weight', 'bold')
             .text(`${userName} / ${repoName}`);
     
+        if (!data || Object.keys(data).length === 0) {
+            return d3n.svgString();
+        }
+    
         let labels: string[] = [];
         let values: number[] = [];
     
-        if (data && typeof data === 'object' && Object.keys(data).length > 0) {
-            labels = Object.keys(data).map(dateStr => {
-                const date = new Date(dateStr);
-                return `${date.toLocaleString('en-US', { month: 'short' })} ${date.getDate()}, ${date.getFullYear()}`;
-            });
+        labels = Object.keys(data).map(dateStr => {
+            const date = new Date(dateStr);
+            return `${date.toLocaleString('en-US', { month: 'short' })} ${date.getDate()}, ${date.getFullYear()}`;
+        });
     
-            values = Object.values(data);
-        } else {
-            throw new Error("Data is invalid or empty. Please provide a valid 'data' object.");
-        }
+        values = Object.values(data);
     
         if (labels.length > 10) {
             const step = Math.ceil(labels.length / 10);
@@ -160,106 +160,4 @@ export class Graph{
     
         return d3n.svgString();
     }
-    
-    
-
-    public static generateStyledUI(user: UserData): string {
-        const d3n = new D3Node();
-        const width = 400; // Ancho total de la UI
-        const height = 600; // Alto total de la UI
-        const avatarImage = user.User['avatar_url'];
-        const userName = user.User['name'];
-    
-        const svg = d3n.createSVG(width, height);
-    
-        // Fondo con la imagen grande del avatar
-        svg.append('image')
-            .attr('href', avatarImage)
-            .attr('x', 0)
-            .attr('y', 0)
-            .attr('width', width)
-            .attr('height', height)
-            .attr('preserveAspectRatio', 'xMidYMid slice')
-            .style('filter', 'blur(10px)') // Efecto de desenfoque
-            .style('opacity', 0.6); // Transparencia para resaltar elementos en primer plano
-    
-        // Círculo pequeño para el avatar
-        const avatarGroup = svg.append('g')
-            .attr('transform', `translate(${width / 2}, ${height / 3})`);
-    
-        avatarGroup.append('circle')
-            .attr('cx', 0)
-            .attr('cy', 0)
-            .attr('r', 50) // Radio del círculo pequeño
-            .attr('fill', 'white')
-            .attr('stroke', '#FF69B4') // Borde rosa para darle un diseño moderno
-            .attr('stroke-width', 4);
-    
-        avatarGroup.append('image')
-            .attr('href', avatarImage)
-            .attr('x', -50)
-            .attr('y', -50)
-            .attr('width', 100)
-            .attr('height', 100)
-            .attr('clip-path', 'circle(50px at 50px 50px)');
-    
-        // Texto con el nombre del usuario
-        svg.append('text')
-            .attr('x', width / 2)
-            .attr('y', height / 2 + 20)
-            .attr('text-anchor', 'middle')
-            .attr('font-family', 'Arial, sans-serif')
-            .attr('font-size', 24)
-            .attr('fill', 'white')
-            .attr('font-weight', 'bold')
-            .text(userName);
-    
-        // Texto adicional (ejemplo: "User")
-        svg.append('text')
-            .attr('x', width / 2)
-            .attr('y', height / 2 + 60)
-            .attr('text-anchor', 'middle')
-            .attr('font-family', 'Arial, sans-serif')
-            .attr('font-size', 16)
-            .attr('fill', '#FF69B4')
-            .text('User');
-    
-        return d3n.svgString();
-    }
-    
-      
-    
-
-    public static createGraph(data: any): any {
-        const chartContainer = document.createElement('div');
-        chartContainer.id = 'tradingview-chart';
-        document.body.appendChild(chartContainer);
-
-        const chart = createChart(chartContainer, {
-            width: 800,
-            height: 500,
-            layout: {
-              background: {
-                color: "#fff",
-              },
-              textColor: "#333",
-            },
-            grid: {
-              vertLines: {
-                color: "#eee",
-              },
-              horzLines: {
-                color: "#eee",
-              },
-            },
-          });
-
-        const lineSeries = chart.addLineSeries();
-        lineSeries.setData(data);
-
-        return chart;
-
-    }
-
-
 }
