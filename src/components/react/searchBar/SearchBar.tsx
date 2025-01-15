@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import { svg } from "d3";
+import React, { Fragment, useState } from "react";
 
 const SearchBar: React.FC = () => {
   const [repoUrl, setRepoUrl] = useState<string>("");
   const [graphBlob, setGraphBlob] = useState<Blob | null>(null);
+  const [graphUrl, setGraphUrl] = useState<string>("");
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setRepoUrl(e.target.value);
@@ -22,10 +24,12 @@ const SearchBar: React.FC = () => {
     try {
       const response = await fetch(`http://localhost:4321/repo/${username}/${repository}`);
       if (response.ok) {
-        const blob = await response.blob();
-        setGraphBlob(blob);
-      }
-    } catch (error) {
+        
+      const svgText = await response.text();
+      setGraphBlob(new Blob([svgText], { type: "image/svg+xml" }));
+      setGraphUrl(`data:image/svg+xml;base64,${btoa(svgText)}`);
+            }
+          } catch (error) {
 
     }
 
@@ -61,7 +65,9 @@ const SearchBar: React.FC = () => {
       </div>
 
       {graphBlob && (
-        <img src={URL.createObjectURL(graphBlob)} alt="Graph" />
+        <div className="flex h-[600px] w-full justify-center items-center">
+          <iframe src={graphUrl} title="Graph" className="flex w-full h-full border-none" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} />
+        </div>
       )}
     </div>
   );
