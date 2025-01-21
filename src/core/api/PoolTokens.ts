@@ -1,20 +1,30 @@
-
+const redisClient = require('./redisConfig');
 
 export class PoolTokens{
     private tokens: string[];
     private currentIndex: number = 0;
 
     constructor(){
-        this.tokens = [""];
+        this.getTokens();
     }
 
     //TODO: Obtener los tokens de redis.
-    getTokens(){
-        return this.tokens;
+    async getTokens() {
+        try {
+            const tokens = await redisClient.lrange('tokens', 0, -1);
+            this.tokens = tokens;
+        } catch (error) {
+            console.error('Error loading tokens from Redis:', error);
+            this.tokens = [];
+        }
     }
 
     addToken(token: string) {
-        this.tokens.push(token);
+        redisClient.rpush('tokens', token);
+    }
+
+    removeToken(token: string) {
+        redisClient.lrem('tokens', 0, token);
     }
 
     getNextToken(): string | null {
