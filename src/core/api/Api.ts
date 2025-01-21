@@ -1,13 +1,17 @@
 import { Entorno } from "../../../Entorno";
+import { PoolTokens } from "./PoolTokens";
 
 export class Api{
     private starsHeader: any;
     private normalHeader: any;
+    private poolTokens : PoolTokens;
     constructor(){
+        this.poolTokens = new PoolTokens();
         this.initHeaders();
     }
 
     private initHeaders (){
+        const token = this.poolTokens.getNextToken();
         if (!Entorno.Token && Entorno.Token === '') {
             this.starsHeader = {
                 'Content-Type': 'application/json',
@@ -22,11 +26,11 @@ export class Api{
             this.starsHeader = {
                 'Content-Type': 'application/json',
                 'Accept': 'application/vnd.github.v3.star+json', 
-                'Authorization': `token ${Entorno.Token}`
+                'Authorization': `token ${token}`
             }
             this.normalHeader = {
                 'Content-Type': 'application/json',
-                'Authorization': `token ${Entorno.Token}`
+                'Authorization': `token ${token}`
             }
         }
     }
