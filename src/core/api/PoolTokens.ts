@@ -1,17 +1,25 @@
-const redisClient = require('./redisConfig');
+import { RedisSingleton } from "../redisConfig";
 
-export class PoolTokens{
-    private tokens: string[];
+export class PoolTokens {
+    private tokens: string[] = [];
     private currentIndex: number = 0;
+    private redisClient;
 
-    constructor(){
-        this.getTokens();
+    constructor() {
+        this.initialize();
+    }
+
+    private async initialize() {
+        const redisInstance = RedisSingleton.getInstance();
+        await redisInstance.connect();
+        this.redisClient = redisInstance.getClient();
+        await this.getTokens();
     }
 
     //TODO: Obtener los tokens de redis.
     async getTokens() {
         try {
-            const tokens = await redisClient.lrange('tokens', 0, -1);
+            const tokens = await this.redisClient.lRange('tokens', 0, -1);
             this.tokens = tokens;
         } catch (error) {
             console.error('Error loading tokens from Redis:', error);
@@ -19,12 +27,12 @@ export class PoolTokens{
         }
     }
 
-    addToken(token: string) {
-        redisClient.rpush('tokens', token);
+    async addToken(token: string) {
+        await this.redisClient.rPush('tokens', token);
     }
 
-    removeToken(token: string) {
-        redisClient.lrem('tokens', 0, token);
+    async removeToken(token: string) {
+        await this.redisClient.lRem('tokens', 0, token);
     }
 
     getNextToken(): string | null {
@@ -33,8 +41,6 @@ export class PoolTokens{
         }
         const token = this.tokens[this.currentIndex];
         this.currentIndex = (this.currentIndex + 1) % this.tokens.length; // En caso de que sea mayor al tamaño del array, se reinicia a 0.
-        return this.tokens[this.currentIndex];
+        return token;
     }
-
-
 }
