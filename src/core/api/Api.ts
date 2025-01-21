@@ -35,7 +35,7 @@ export class Api{
         }
     }
 
-    public async fetchUSer(user: string): Promise<any> {
+    public async fetchUSer(user: string, contRecursivo = 1): Promise<any> {
         const url = new URL(`${Entorno.Api}/users/${user}`);
 
         return fetch(url.toString(), {
@@ -43,7 +43,11 @@ export class Api{
             headers: this.normalHeader
         }).then(response => {
             if (!response.ok){
-                throw new Error(response.statusText);
+                if (response.status == 403){
+                    if (contRecursivo > 5) throw new Error(response.statusText);
+                        this.initHeaders();
+                        return this.fetchUSer(user, contRecursivo + 1);
+                }
             }
             return response.json();
         })
