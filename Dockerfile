@@ -8,12 +8,12 @@ RUN npm run build
 
 ENV PORT=4321
 
-RUN sh -c 'echo "export const Entorno = { \
+RUN echo "export const Entorno = { \
     Api: \"https://api.github.com\", \
     Token: \"\", \
     Port: $PORT, \
     Host: true \
-}" > Entorno.ts'
+}" > Entorno.ts
 
 
 EXPOSE 4321
