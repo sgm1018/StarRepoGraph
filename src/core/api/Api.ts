@@ -49,7 +49,7 @@ export class Api {
       headers: this.normalHeader,
     }).then((response) => {
       if (!response.ok) {
-        if (response.status == 403) {
+        if (response.status == 403 || response.status == 401) {
           if (contRecursivo > 5) throw new Error(response.statusText);
           this.initHeaders(); // Cambiamos el token
           return this.fetchUSer(user, contRecursivo + 1); // Intentamos de nuevo
