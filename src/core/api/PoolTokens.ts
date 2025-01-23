@@ -1,46 +1,50 @@
-import { RedisSingleton } from "../redisConfig";
+import { RedisClientSingleton } from "../redisConfig";
 
 export class PoolTokens {
-    private tokens: string[] = [];
-    private currentIndex: number = 0;
-    private redisClient;
+  private tokens: string[] = [];
+  private currentIndex: number = 0;
+  private redis!: RedisClientSingleton;
 
-    constructor() {
-        this.initialize();
-    }
+  // Constructor privado para usar el patrón `create()`.
+  private constructor() {}
 
-    private async initialize() {
-        const redisInstance = RedisSingleton.getInstance();
-        await redisInstance.connect();
-        this.redisClient = redisInstance.getClient();
-        await this.getTokens();
-    }
+  // Método estático para crear una instancia inicializada
+  public static async create(): Promise<PoolTokens> {
+    const poolTokens = new PoolTokens();
+    poolTokens.redis = await RedisClientSingleton.getInstance();
+    await poolTokens.getTokens(); // Cargar tokens desde Redis
+    return poolTokens;
+  }
 
-    //TODO: Obtener los tokens de redis.
-    async getTokens() {
-        try {
-            const tokens = await this.redisClient.lRange('tokens', 0, -1);
-            this.tokens = tokens;
-        } catch (error) {
-            console.error('Error loading tokens from Redis:', error);
-            this.tokens = [];
-        }
+  // Cargar los tokens desde Redis
+  private async getTokens() {
+    try {
+      this.tokens = await this.redis.lrange("tokens", 0, -1);
+    } catch (error) {
+      console.error("Error loading tokens from Redis:", error);
+      this.tokens = [];
     }
+  }
 
-    async addToken(token: string) {
-        await this.redisClient.rPush('tokens', token);
+  // Obtener el siguiente token del pool
+  public getNextToken(): string | null {
+    if (this.tokens.length === 0) {
+      return null;
     }
+    const token = this.tokens[this.currentIndex];
+    this.currentIndex = (this.currentIndex + 1) % this.tokens.length;
+    return token;
+  }
 
-    async removeToken(token: string) {
-        await this.redisClient.lRem('tokens', 0, token);
-    }
+  // Agregar un token al pool
+  public async addToken(token: string) {
+    this.tokens.push(token);
+    await this.redis.lpush("tokens", token);
+  }
 
-    getNextToken(): string | null {
-        if (this.tokens.length === 0) {
-            return null;
-        }
-        const token = this.tokens[this.currentIndex];
-        this.currentIndex = (this.currentIndex + 1) % this.tokens.length; // En caso de que sea mayor al tamaño del array, se reinicia a 0.
-        return token;
-    }
+  // Eliminar un token del pool
+  public async removeToken(token: string) {
+    this.tokens = this.tokens.filter((t) => t !== token);
+    await this.redis.set("tokens", this.tokens.join(","));
+  }
 }
