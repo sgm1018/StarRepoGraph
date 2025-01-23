@@ -4,9 +4,8 @@ import type { UserData } from "../interfaces/UserData";
 export class Scrapper {
     private api: Api;
 
-    constructor(){
-        this.api = new Api();
-
+    constructor(api : Api){
+        this.api = api;
     }
 
 

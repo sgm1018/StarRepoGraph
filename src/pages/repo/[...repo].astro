@@ -8,7 +8,7 @@ const user = repo.split('/')[0];
 const repoName = repo.split('/')[1];
 
 const api = await Api.create();
-const scrapper = new Scrapper();
+const scrapper = new Scrapper(api);
 const userData = await scrapper.getSortedStars(user, repoName, 100);
 const starsTimeline = scrapper.generateStarsTimeline(userData);
 // const svg = Graph.generateLineChart(userData, starsTimeline);
