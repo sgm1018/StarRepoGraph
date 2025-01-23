@@ -20,7 +20,7 @@ export class Api {
 
   private initHeaders() {
     const token = this.poolTokens.getNextToken();
-    if (!Entorno.Token || Entorno.Token === "") {
+    if (!token || token === "") {
       this.starsHeader = {
         "Content-Type": "application/json",
         Accept: "application/vnd.github.v3.star+json",
