@@ -1,32 +1,24 @@
-FROM node:lts-alpine AS runtime
+# Usa la imagen oficial de Node.js
+FROM node:lts-alpine
+
 WORKDIR /app
 
 COPY . .
-
 
 ENV PORT=4321
 ENV RedisUrl='redis://localhost:6379'
 
 RUN apk add --no-cache redis \
-&& redis-server --daemonize yes
+    && redis-server --daemonize yes
 
-RUN apk add --no-cache coreutils
+# Genera el archivo Entorno.ts
+RUN echo "export const Entorno = { Api: 'https://api.github.com', Token: '', Port: process.env.PORT, Host: true, RedisUrl: process.env.RedisUrl };" > Entorno.ts
 
+RUN chmod 777 Entorno.ts
 
-RUN echo "export const Entorno = { \
-Api: 'https://api.github.com', \
-Token: '', \
-Port: $PORT, \
-Host: true, \
-RedisUrl: $RedisUrl \
-}" > Entorno.ts
-
-# RUN npm install
-# RUN npm run build
-
+RUN npm install
+RUN npm run build
 
 EXPOSE 4321
 
-# Start Redis and your Node.js application
-# CMD node ./dist/server/entry.mjs
-CMD ["tail -f /dev/null"]
+CMD redis-server --daemonize yes && node ./dist/server/entry.mjs --host 0.0.0.0 --port $PORT
