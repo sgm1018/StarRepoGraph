@@ -21,4 +21,4 @@ RUN npm run build
 
 EXPOSE 4321
 
-CMD redis-server --daemonize yes && node ./dist/server/entry.mjs --host 0.0.0.0 --port $PORT
+CMD redis-server --daemonize yes && node ./dist/server/entry.mjs --host 0.0.0.0
